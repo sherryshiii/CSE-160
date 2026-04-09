@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ASG 1 — WebGL Paint</title>
+    <!-- WebGL helpers, then shape modules, then main program. -->
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="asg1.js"></script>
+    <!-- Flex rows for buttons and sliders. -->
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 16px;
+      }
+      .row {
+        margin: 10px 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+      }
+      .row-label {
+        font-weight: 600;
+        margin-right: 4px;
+      }
+      .color-row label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .size-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        max-width: 560px;
+      }
+      .size-row label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      input[type="range"] {
+        vertical-align: middle;
+      }
+      .awesome-note {
+        font-size: 0.9rem;
+        color: #333;
+        margin-top: 14px;
+      }
+      .ref-block {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <!-- Calls main() when the page loads. -->
+  <body onload="main()">
+    <h2>ASG1 WebGL Paint</h2>
+
+    <!-- Drawing surface; id=webgl is read in asg1.js. -->
+    <canvas id="webgl" width="400" height="400">
+      Please use a browser that supports "canvas"
+    </canvas>
+
+    <!-- Clears all shapes. -->
+    <div class="row">
+      <button type="button" id="btnClear">Clear Canvas</button>
+    </div>
+
+    <!-- Tool mode, demo scene, undo. -->
+    <div class="row">
+      <span class="row-label">Drawing Mode:</span>
+      <button type="button" id="btnPoint">Squares</button>
+      <button type="button" id="btnTriangle">Triangles</button>
+      <button type="button" id="btnCircle">Circles</button>
+      <span style="margin-left: 12px"></span>
+      <button type="button" id="btnDemo">Draw picture</button>
+      <button type="button" id="btnUndo">Undo last shape</button>
+    </div>
+
+    <!-- RGB sliders: redS, greenS, blueS. -->
+    <div class="row color-row">
+      <span class="row-label">Shape Color:</span>
+      <label for="redS">Red <input type="range" id="redS" min="0" max="255" value="255" /></label>
+      <label for="greenS">Green <input type="range" id="greenS" min="0" max="255" value="0" /></label>
+      <label for="blueS">Blue <input type="range" id="blueS" min="0" max="255" value="0" /></label>
+    </div>
+
+    <!-- Brush size and circle segment count. -->
+    <div class="row size-row">
+      <label for="sizeS">Shape Size: <input type="range" id="sizeS" min="2" max="40" value="10" /></label>
+      <label for="segS">(Circles) Segment Count: <input type="range" id="segS" min="3" max="64" value="16" /></label>
+    </div>
+
+    <!-- Short text: undo only the last shape. -->
+    <p class="awesome-note">
+      <strong>Awesome:</strong> Undo removes the last painted shape without clearing the whole canvas.
+    </p>
+
+    <!-- Draw-picture write-up and hand-drawn reference image. -->
+    <div class="ref-block">
+      <p>This is my draw picture.</p>
+      <p>The stem is shaped like the letter S (my initial).</p>
+      <img
+        id="refImg"
+        src="reference.jpg"
+        alt="My draw picture reference"
+        width="240"
+        style="border: 1px solid #ccc"
+      />
+    </div>
+  </body>
+</html>
