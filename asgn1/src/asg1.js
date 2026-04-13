@@ -1,4 +1,11 @@
-// Vertex shader: clip position and point size.
+/*
+ * Sherry Shi
+ * CSE 160 - Assignment 1
+ * asg1.js
+ */
+
+// --- Shaders ---
+// Vertex: clip-space position; point size uniform.
 var VERTEX_SHADER =
   'attribute vec3 a_Position;\n' +
   'uniform float u_Size;\n' +
@@ -7,7 +14,7 @@ var VERTEX_SHADER =
   '  gl_PointSize = u_Size;\n' +
   '}\n';
 
-// Fragment shader: one RGBA color.
+// Fragment: flat RGB fill.
 var FRAGMENT_SHADER =
   'precision mediump float;\n' +
   'uniform vec3 u_Color;\n' +
@@ -15,7 +22,8 @@ var FRAGMENT_SHADER =
   '  gl_FragColor = vec4(u_Color, 1.0);\n' +
   '}\n';
 
-// All shapes to draw each frame.
+// --- Scene state ---
+// One list of shapes per frame.
 var shapesList = [];
 
 // Brush: RGB, pixel size, circle segments, active tool.
@@ -24,21 +32,21 @@ var g_pointSizePx = 10.0;
 var g_circleSegments = segmentSliderToCount(16);
 var g_drawMode = 'point';
 
-// WebGL context, buffer, shader locations.
+// GL context, buffer, shader locations.
 var g_gl = null;
 var g_vertexBuffer = null;
 var g_aPosition = null;
 var g_uColor = null;
 var g_uSize = null;
 
-// Same GL state for Triangle.js / Circle.js.
+// Same handles for Triangle.js / Circle.js.
 window.g_gl = null;
 window.g_vertexBuffer = null;
 window.g_aPosition = null;
 window.g_uColor = null;
 window.g_uSize = null;
 
-// Point brush: one screen-space square via GL_POINTS.
+// --- Point class (square via GL_POINTS) ---
 function Point(cx, cy, r, g, b, sizePx) {
   this.cx = cx;
   this.cy = cy;
@@ -46,7 +54,7 @@ function Point(cx, cy, r, g, b, sizePx) {
   this.sizePx = sizePx;
 }
 
-// Push one vertex; set size and color; draw POINTS.
+// Upload one vertex; set uniforms; draw POINTS.
 Point.prototype.render = function () {
   var gl = g_gl;
   var data = new Float32Array([this.cx, this.cy, 0.0]);
@@ -59,7 +67,8 @@ Point.prototype.render = function () {
   gl.drawArrays(gl.POINTS, 0, 1);
 };
 
-// Create WebGL context (keep buffer when dragging) and one ARRAY_BUFFER.
+// --- WebGL init ---
+// Context with preserved buffer (for drag drawing). One ARRAY_BUFFER.
 function setupWebGL() {
   var canvas = document.getElementById('webgl');
   g_gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });
@@ -73,7 +82,7 @@ function setupWebGL() {
   return true;
 }
 
-// Build shader program; store a_Position, u_Color, u_Size.
+// Link program; cache a_Position, u_Color, u_Size.
 function connectVariablesToGLSL() {
   if (!initShaders(g_gl, VERTEX_SHADER, FRAGMENT_SHADER)) {
     console.log('Failed to init shaders.');
@@ -88,7 +97,7 @@ function connectVariablesToGLSL() {
   return true;
 }
 
-// Black clear; redraw whole list.
+// Clear black; draw every shape in the list.
 function renderAllShapes() {
   if (!g_gl) return;
   g_gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -98,7 +107,8 @@ function renderAllShapes() {
   }
 }
 
-// Mouse position in canvas pixels to clip space [-1, 1].
+// --- Pointer input ---
+// Canvas pixel coords to clip space [-1, 1].
 function eventToClip(ev) {
   var canvas = ev.target;
   var rect = canvas.getBoundingClientRect();
@@ -109,7 +119,7 @@ function eventToClip(ev) {
   return { x: cx, y: cy };
 }
 
-// Add point, triangle, or circle at event using current brush.
+// Append point, triangle, or circle at pointer; uses current brush.
 function addShapeAtEvent(ev) {
   var p = eventToClip(ev);
   var r = g_color[0];
@@ -122,7 +132,7 @@ function addShapeAtEvent(ev) {
   }
 
   if (g_drawMode === 'triangle') {
-    // Equilateral triangle around click; scale from size slider.
+    // Equilateral triangle around click; size from slider.
     var canvas = document.getElementById('webgl');
     var s = (g_pointSizePx / Math.min(canvas.width, canvas.height)) * 2.0 * 0.6;
     var x0 = p.x;
@@ -145,7 +155,7 @@ function addShapeAtEvent(ev) {
   }
 }
 
-// Paint on mousedown; on mousemove only if left button down.
+// Paint on mousedown; on mousemove only if left button held.
 function handleClicks(ev) {
   if (ev.type === 'mousemove' && ev.buttons !== 1) {
     return;
@@ -154,13 +164,23 @@ function handleClicks(ev) {
   renderAllShapes();
 }
 
-// Empty shapes; redraw black canvas.
+// --- UI actions ---
+// Clear list; redraw empty canvas.
 function clearCanvas() {
   shapesList = [];
   renderAllShapes();
 }
 
-// Map slider 3..64 to segment count (power curve for visible low end).
+// Pop last shape; redraw.
+function undoLast() {
+  if (shapesList.length > 0) {
+    shapesList.pop();
+    renderAllShapes();
+  }
+}
+
+// --- Circle segment mapping ---
+// Map slider 3..64 to count (curve so low end still shows change).
 function segmentSliderToCount(sliderVal) {
   var minS = 3;
   var maxS = 64;
@@ -170,34 +190,27 @@ function segmentSliderToCount(sliderVal) {
   return Math.round(minS + Math.pow(p, exp) * (maxS - minS));
 }
 
-// Append axis-aligned rect as two triangles.
+// --- Demo picture helpers ---
+// Add axis-aligned rectangle as two triangles.
 function pushQuadAsTwoTriangles(list, x, y, w, h, r, g, b) {
   var T = Triangle;
   list.push(new T(r, g, b, drawTriangle([x, y, x + w, y, x + w, y + h])));
   list.push(new T(r, g, b, drawTriangle([x, y, x + w, y + h, x, y + h])));
 }
 
-// Append diamond (two triangles).
+// Add diamond from two triangles.
 function pushDiamond(list, cx, cy, rx, ry, r, g, b) {
   var T = Triangle;
   list.push(new T(r, g, b, drawTriangle([cx, cy + ry, cx + rx, cy, cx, cy - ry])));
   list.push(new T(r, g, b, drawTriangle([cx, cy + ry, cx, cy - ry, cx - rx, cy])));
 }
 
-// Append one triangle.
+// Add one triangle.
 function pushTriangle(list, x1, y1, x2, y2, x3, y3, r, g, b) {
   list.push(new Triangle(r, g, b, drawTriangle([x1, y1, x2, y2, x3, y3])));
 }
 
-// Drop last shape; redraw.
-function undoLast() {
-  if (shapesList.length > 0) {
-    shapesList.pop();
-    renderAllShapes();
-  }
-}
-
-// Replace list with demo: flower grid, tips, S stem.
+// Build fixed demo: diamond grid flower, edge tips, S-shaped stem.
 function loadDemoPainting() {
   shapesList = [];
 
@@ -212,7 +225,7 @@ function loadDemoPainting() {
   var centerG = 0.92;
   var centerB = 0.45;
 
-  // 3x3 diamonds; center cell different color.
+  // 3x3 diamond grid; center cell uses accent color.
   var rr;
   var cc;
   for (rr = 0; rr < 3; rr++) {
@@ -228,7 +241,7 @@ function loadDemoPainting() {
     }
   }
 
-  // Four outward triangles on flower edges.
+  // Four outward triangles on flower sides.
   var tip = 0.055;
   var tw = rx * 0.95;
   pushTriangle(shapesList, 0, yTop + ry + tip, -tw, yTop + ry, tw, yTop + ry, petalR, petalG, petalB);
@@ -240,7 +253,7 @@ function loadDemoPainting() {
   pushTriangle(shapesList, leftX - tip, yMid, leftX, yMid + tw, leftX, yMid - tw, petalR, petalG, petalB);
   pushTriangle(shapesList, rightX + tip, yMid, rightX, yMid + tw, rightX, yMid - tw, petalR, petalG, petalB);
 
-  // Stem: stacked horizontal and vertical quads (S shape).
+  // Stem from stacked quads (S curve).
   var sR = 0.18;
   var sG = 0.62;
   var sB = 0.28;
@@ -262,7 +275,8 @@ function loadDemoPainting() {
   renderAllShapes();
 }
 
-// Init GL and shaders; bind UI; first redraw.
+// --- Entry ---
+// Init GL and shaders; wire canvas and controls; first draw.
 function main() {
   if (!setupWebGL()) return;
   if (!connectVariablesToGLSL()) return;
@@ -284,7 +298,7 @@ function main() {
   document.getElementById('btnDemo').onclick = loadDemoPainting;
   document.getElementById('btnUndo').onclick = undoLast;
 
-  // RGB sliders -> g_color (0..1).
+  // Sliders: RGB 0..1 into g_color.
   function syncColorFromSliders() {
     g_color[0] = document.getElementById('redS').value / 255;
     g_color[1] = document.getElementById('greenS').value / 255;

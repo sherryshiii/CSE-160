@@ -1,4 +1,11 @@
-// Filled disk: many triangles around center.
+/*
+ * Sherry Shi
+ * CSE 160 - Assignment 1
+ * Circle.js
+ */
+
+// --- Circle class ---
+// Filled disk: center, radius, segment count, RGB.
 function Circle(cx, cy, radius, segments, r, g, b) {
   this.cx = cx;
   this.cy = cy;
@@ -7,7 +14,7 @@ function Circle(cx, cy, radius, segments, r, g, b) {
   this.color = [r, g, b];
 }
 
-// Build wedge list; upload; draw all triangles.
+// Build triangle fan wedges; upload; draw all triangles.
 Circle.prototype.render = function () {
   var gl = window.g_gl;
   if (!gl) return;
@@ -18,7 +25,7 @@ Circle.prototype.render = function () {
   var cy = this.cy;
   var rad = this.radius;
 
-  // One triangle per wedge: center, rim i, rim i+1.
+  // Each wedge: center, rim i, rim i+1.
   for (var i = 0; i < n; i++) {
     var a0 = (i / n) * Math.PI * 2;
     var a1 = ((i + 1) / n) * Math.PI * 2;

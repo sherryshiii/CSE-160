@@ -1,16 +1,21 @@
+<!--
+  Sherry Shi
+  CSE 160 - Assignment 1
+  asg1.html
+-->
+  
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>ASG 1 — WebGL Paint</title>
-    <!-- WebGL helpers, then shape modules, then main program. -->
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>
     <script src="Triangle.js"></script>
     <script src="Circle.js"></script>
     <script src="asg1.js"></script>
-    <!-- Flex rows for buttons and sliders. -->
+
     <style>
       body {
         font-family: sans-serif;
@@ -70,26 +75,24 @@
     </style>
   </head>
 
-  <!-- Calls main() when the page loads. -->
   <body onload="main()">
+    <!-- Grader meta: name, email. -->
     <div class="submit-meta">
       <p><strong>Name:</strong> Sherry Shi</p>
       <p><strong>UCSC Email:</strong> Yshi162@ucsc.edu</p>
     </div>
 
-    <h2>ASG1 WebGL Paint</h2>
-
-    <!-- Drawing surface; id=webgl is read in asg1.js. -->
+    <!-- Canvas: id webgl used in asg1.js. -->
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
     </canvas>
 
-    <!-- Clears all shapes. -->
+    <!-- Clear button: empty shape list. -->
     <div class="row">
       <button type="button" id="btnClear">Clear Canvas</button>
     </div>
 
-    <!-- Tool mode, demo scene, undo. -->
+    <!-- Mode buttons, demo picture load, undo last shape. -->
     <div class="row">
       <span class="row-label">Drawing Mode:</span>
       <button type="button" id="btnPoint">Squares</button>
@@ -100,7 +103,7 @@
       <button type="button" id="btnUndo">Undo last shape</button>
     </div>
 
-    <!-- RGB sliders: redS, greenS, blueS. -->
+    <!-- Color sliders: redS, greenS, blueS. -->
     <div class="row color-row">
       <span class="row-label">Shape Color:</span>
       <label for="redS">Red <input type="range" id="redS" min="0" max="255" value="255" /></label>
@@ -108,25 +111,25 @@
       <label for="blueS">Blue <input type="range" id="blueS" min="0" max="255" value="0" /></label>
     </div>
 
-    <!-- Brush size and circle segment count. -->
+    <!-- Size slider; circle segment slider. -->
     <div class="row size-row">
       <label for="sizeS">Shape Size: <input type="range" id="sizeS" min="2" max="40" value="10" /></label>
       <label for="segS">(Circles) Segment Count: <input type="range" id="segS" min="3" max="64" value="16" /></label>
     </div>
 
-    <!-- Short text: undo only the last shape. -->
+    <!-- Extra feature note: partial undo. -->
     <p class="awesome-note">
-      <strong>Awesome:</strong> Undo removes the last painted shape without clearing the whole canvas.
+      <strong>Awesome:</strong> Undo drops only the last shape; canvas stays otherwise.
     </p>
 
-    <!-- Draw-picture write-up and hand-drawn reference image. -->
+    <!-- Draw-picture text + reference scan. -->
     <div class="ref-block">
-      <p>This is my draw picture.</p>
-      <p>The stem is shaped like the letter S (my initial).</p>
+      <p>Draw picture for the assignment.</p>
+      <p>Stem shaped like letter S (initial).</p>
       <img
         id="refImg"
         src="reference.jpg"
-        alt="My draw picture reference"
+        alt="Hand-drawn reference for draw picture"
         width="240"
         style="border: 1px solid #ccc"
       />

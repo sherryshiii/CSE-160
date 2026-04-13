@@ -1,4 +1,11 @@
-// Six xy numbers -> Float32Array of 3 vertices (z = 0).
+/*
+ * Sherry Shi
+ * CSE 160 - Assignment 1
+ * Triangle.js
+ */
+
+// --- Helpers ---
+// Six xy values -> Float32Array of three verts (z = 0).
 function drawTriangle(verts9) {
   if (verts9.length !== 6) {
     return null;
@@ -10,13 +17,14 @@ function drawTriangle(verts9) {
   ]);
 }
 
-// Holds color + vertex buffer; draws one triangle.
+// --- Triangle class ---
+// Stores color and vertex buffer for one triangle.
 function Triangle(r, g, b, vbuf) {
   this.color = [r, g, b];
   this.vertices = vbuf;
 }
 
-// Upload buffer; set uniforms; draw TRIANGLES (3 verts).
+// Upload verts; set uniforms; draw TRIANGLES (3 verts).
 Triangle.prototype.render = function () {
   var gl = window.g_gl;
   if (!gl) return;
