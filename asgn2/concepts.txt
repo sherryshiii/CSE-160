@@ -1,0 +1,11 @@
+Apply Transformations - DONE
+  -translation - DONE
+  -rotation - DONE
+  -scaling - DONE
+
+Create 3D objects (Cube)
+  - Create class for 3D objects - DONE
+  - Setup Color attribute - DONE
+  - Multiple 3D Objects - DONE
+
+Animation - DONE

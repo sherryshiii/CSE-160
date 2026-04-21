@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ASG 2</title>
+    <style>
+      body {
+        background-color: #ffffff;
+        margin: 8px;
+      }
+      .scene-hint {
+        font-size: 0.9rem;
+        color: #333;
+        max-width: 420px;
+        line-height: 1.45;
+      }
+    </style>
+
+    <script src="asg2.js"></script>
+
+    <!-- Load geometry -->
+    <script src="geometry/geometry.js"></script>
+    <script src="geometry/triangle.js"></script>
+    <script src="geometry/cube.js"></script>
+
+    <!-- Load external libraries -->
+    <script src="lib/cuon-matrix-cse160.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/webgl-utils.js"></script>
+  </head>
+
+  <body onload="main()">
+    <p>
+      <label for="sliderGlobalRot">Global rotation (Y): </label>
+      <input type="range" id="sliderGlobalRot" min="0" max="360" value="0" />
+      <span id="globalRotLabel">0</span>°
+    </p>
+    <p>
+      <label for="sliderThighX">Thigh bend (X): </label>
+      <input type="range" id="sliderThighX" min="-60" max="60" value="12" />
+      <span id="thighXLabel">12</span>°
+    </p>
+    <p>
+      <label for="sliderCalfX">Calf bend (X): </label>
+      <input type="range" id="sliderCalfX" min="-60" max="60" value="-10" />
+      <span id="calfXLabel">-10</span>°
+    </p>
+    <p>
+      <label for="sliderFootX">Foot bend (X): </label>
+      <input type="range" id="sliderFootX" min="-60" max="60" value="0" />
+      <span id="footXLabel">0</span>°
+    </p>
+    <p>
+      <button type="button" id="btnAnimationToggle">Turn animation ON</button>
+    </p>
+    <p>FPS: <span id="fpsLabel">--</span></p>
+    <p class="scene-hint">
+      Hi! I am your little panda. Hold left mouse and drag me gently so I can show you every side.<br />
+      If you hold <strong>Shift</strong> and click me, I will do happy arm for you!
+    </p>
+    <canvas id="webgl" width="400" height="400">
+      Please use a browser that supports "canvas"
+    </canvas>
+  </body>
+</html>
