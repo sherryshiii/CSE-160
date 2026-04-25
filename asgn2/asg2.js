@@ -156,6 +156,16 @@ function renderScene() {
 
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+  const t = g_time * 0.002;
+  const animOn = g_animationOn ? 1 : 0;
+  // Small "alive" motion when animation is on.
+  const bodyBob = animOn * (0.03 * Math.sin(t * 2.0));
+  const bodySwayZ = animOn * (3.0 * Math.sin(t));
+  const bodySwayX = animOn * (2.0 * Math.sin(t + 0.9));
+  const headNodX = animOn * (6.0 * Math.sin(t * 1.4 + 0.4));
+  const headTurnY = animOn * (4.0 * Math.sin(t * 0.9 - 0.2));
+  const earFlopZ = animOn * (8.0 * Math.sin(t * 1.8));
+
   // Combine slider rotation and mouse rotation.
   let globalMat = new Matrix4();
   globalMat.setIdentity();
@@ -176,6 +186,9 @@ function renderScene() {
   const bodySy = 0.34;
   const bodySz = 0.2;
   M.setIdentity();
+  M.multiply(new Matrix4().setTranslate(0, bodyBob, 0));
+  M.multiply(new Matrix4().setRotate(bodySwayZ, 0, 0, 1));
+  M.multiply(new Matrix4().setRotate(bodySwayX, 1, 0, 0));
   M.multiply(new Matrix4().setScale(bodySx, bodySy, bodySz));
   drawCube(M, gUnitCube, colWhite);
 
@@ -196,12 +209,16 @@ function renderScene() {
   M.setIdentity();
   M.multiply(body);
   M.multiply(new Matrix4().setTranslate(0, headY, 0));
+  M.multiply(new Matrix4().setRotate(headTurnY, 0, 1, 0));
+  M.multiply(new Matrix4().setRotate(headNodX, 1, 0, 0));
   M.multiply(new Matrix4().setScale(headWx, headHy, headWz));
   drawCube(M, gUnitCube, colWhite);
 
   const headBase = new Matrix4();
   headBase.set(body);
   headBase.multiply(new Matrix4().setTranslate(0, headY, 0));
+  headBase.multiply(new Matrix4().setRotate(headTurnY, 0, 1, 0));
+  headBase.multiply(new Matrix4().setRotate(headNodX, 1, 0, 0));
   headBase.multiply(new Matrix4().setScale(headWx, headHy, headWz));
 
   const eyeS = 0.14;
@@ -241,6 +258,7 @@ function renderScene() {
   const earBaseR = new Matrix4();
   earBaseR.set(headBase);
   earBaseR.multiply(new Matrix4().setTranslate(0.78, earY, 0));
+  earBaseR.multiply(new Matrix4().setRotate(-earFlopZ, 0, 0, 1));
   earBaseR.multiply(new Matrix4().setScale(0.22, 0.2, 0.18));
   M.setIdentity();
   M.multiply(earBaseR);
@@ -254,6 +272,7 @@ function renderScene() {
   const earBaseL = new Matrix4();
   earBaseL.set(headBase);
   earBaseL.multiply(new Matrix4().setTranslate(-0.78, earY, 0));
+  earBaseL.multiply(new Matrix4().setRotate(earFlopZ, 0, 0, 1));
   earBaseL.multiply(new Matrix4().setScale(0.22, 0.2, 0.18));
   M.setIdentity();
   M.multiply(earBaseL);
@@ -355,7 +374,8 @@ function renderScene() {
     const drawBambooAt = (tx, tz, degY) => {
       M.setIdentity();
       M.multiply(new Matrix4().setTranslate(tx, bambooY, tz));
-      M.multiply(new Matrix4().setRotate(degY, 0, 1, 0));
+      const sway = animOn * (6.0 * Math.sin(t * 1.2 + (tx + tz) * 3.0));
+      M.multiply(new Matrix4().setRotate(degY + sway, 0, 1, 0));
       M.multiply(new Matrix4().setScale(bambooS, bambooS, bambooS));
       drawBamboo(M);
     };
@@ -372,7 +392,7 @@ function theNewTime() {
 
 // Time update for all animation values.
 function updateAnimationAngles() {
-  // Reset poke values when poke is inactive.
+  // Base arm motion (walk) + optional poke overlay.
   gArmCircleXDeg = 0;
   gArmCircleZDeg = 0;
   if (g_pokeActive) {
@@ -399,6 +419,12 @@ function updateAnimationAngles() {
   gJointThighX = 12 + 18 * Math.sin(t);
   gJointCalfX = -10 + 14 * Math.sin(t + 1.1);
   gJointFootX = 10 * Math.sin(t + 2.2);
+
+  // Subtle arm swing during main animation. If poke is active, it overlays.
+  const baseArmX = 10 * Math.sin(t + 0.6);
+  const baseArmZ = 4 * Math.sin(t + 2.0);
+  gArmCircleXDeg += baseArmX;
+  gArmCircleZDeg += baseArmZ;
 }
 
 function updateFpsDisplay() {
@@ -659,5 +685,3 @@ function main() {
     animate();
 
 }
-
-
