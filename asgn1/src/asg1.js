@@ -46,7 +46,7 @@ window.g_aPosition = null;
 window.g_uColor = null;
 window.g_uSize = null;
 
-// --- Point class (square via GL_POINTS) ---
+// --- Point class ---
 function Point(cx, cy, r, g, b, sizePx) {
   this.cx = cx;
   this.cy = cy;
@@ -119,7 +119,7 @@ function eventToClip(ev) {
   return { x: cx, y: cy };
 }
 
-// Append point, triangle, or circle at pointer; uses current brush.
+// Append point, triangle, or circle at pointer
 function addShapeAtEvent(ev) {
   var p = eventToClip(ev);
   var r = g_color[0];
@@ -155,7 +155,7 @@ function addShapeAtEvent(ev) {
   }
 }
 
-// Paint on mousedown; on mousemove only if left button held.
+// Paint on mousedown
 function handleClicks(ev) {
   if (ev.type === 'mousemove' && ev.buttons !== 1) {
     return;
@@ -180,7 +180,6 @@ function undoLast() {
 }
 
 // --- Circle segment mapping ---
-// Map slider 3..64 to count (curve so low end still shows change).
 function segmentSliderToCount(sliderVal) {
   var minS = 3;
   var maxS = 64;
@@ -210,7 +209,7 @@ function pushTriangle(list, x1, y1, x2, y2, x3, y3, r, g, b) {
   list.push(new Triangle(r, g, b, drawTriangle([x1, y1, x2, y2, x3, y3])));
 }
 
-// Build fixed demo: diamond grid flower, edge tips, S-shaped stem.
+// Build demo
 function loadDemoPainting() {
   shapesList = [];
 
@@ -298,7 +297,7 @@ function main() {
   document.getElementById('btnDemo').onclick = loadDemoPainting;
   document.getElementById('btnUndo').onclick = undoLast;
 
-  // Sliders: RGB 0..1 into g_color.
+  // Sync color from sliders
   function syncColorFromSliders() {
     g_color[0] = document.getElementById('redS').value / 255;
     g_color[1] = document.getElementById('greenS').value / 255;
