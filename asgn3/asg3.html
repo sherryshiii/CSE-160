@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ASG 3 — Sherry's Mini World</title>
+
+    <script src="asg3.js"></script>
+
+    <!-- Load camera -->
+    <script src="camera.js"></script>
+
+    <!-- Load geometry -->
+    <script src="geometry/geometry.js"></script>
+    <script src="geometry/triangle.js"></script>
+    <script src="geometry/cube.js"></script>
+    <script src="geometry/square.js"></script>
+
+    <!-- Load external libraries -->
+    <script src="lib/cuon-matrix-cse160.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/webgl-utils.js"></script>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 720px;
+        margin: 24px auto;
+        padding: 0 16px;
+        color: #222;
+      }
+      .header {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 14px 18px;
+        margin-bottom: 18px;
+        background: #fafafa;
+      }
+      .header b { color: #000; }
+      h1 { margin: 12px 0 8px; font-size: 1.6em; }
+      .intro { color: #444; line-height: 1.55; margin-bottom: 16px; }
+      .controls {
+        background: #f3f6fa;
+        border-left: 4px solid #4a90e2;
+        padding: 10px 14px;
+        margin: 14px 0;
+        font-size: 0.95em;
+        line-height: 1.7;
+      }
+      .controls kbd {
+        background: #fff; border: 1px solid #bbb; border-bottom-width: 2px;
+        border-radius: 4px; padding: 1px 6px; font-family: monospace;
+        font-size: 0.9em;
+      }
+      .wow {
+        background: #fff8e1;
+        border-left: 4px solid #f5a623;
+        padding: 10px 14px;
+        margin: 14px 0;
+        line-height: 1.55;
+      }
+      canvas { display: block; border: 1px solid #ccc; }
+    </style>
+  </head>
+
+  <body onload="main()">
+
+    <div class="header">
+      <div><b>Name:</b> Sherry Shi</div>
+      <div><b>UCSC Email:</b> Yshi162@ucsc.edu</div>
+    </div>
+
+    <h1>Hi, welcome to Sherry's mini world!</h1>
+
+    <p class="intro">
+      It's a 32&times;32 voxel world with stone outer walls, brick towers,
+      a small staircase, a few wood blocks, and a grass floor. I've hidden 5
+      gold blocks in the corners &mdash; walk into each one to pick it up.
+      You can also place and break blocks wherever you want.
+    </p>
+
+    <canvas id="webgl" width="400" height="400">
+      Please use a browser that supports "canvas"
+    </canvas>
+
+    <div class="controls">
+      <b>Controls</b><br>
+      <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> &mdash; move forward / left / back / right<br>
+      <kbd>Q</kbd> <kbd>E</kbd> &mdash; turn the camera left / right<br>
+      Hold <b>left mouse button</b> and drag &mdash; look around (yaw + pitch, just like a regular FPS game)<br>
+      <kbd>F</kbd> &mdash; place a brick block in the cell right in front of you (stacks up to 4 high)<br>
+      <kbd>G</kbd> &mdash; remove the topmost block from the cell in front of you
+    </div>
+
+    <div id="score" style="font-size:1.3em; font-weight:bold; margin-top:8px; color:#b8860b;">Gold: 0 / 5</div>
+    <div id="story" style="margin-top:6px; color:#444;">
+      <b>Quest:</b> 5 gold blocks are hidden in the corners of the world.
+      Walk into each one to pick it up!
+    </div>
+
+    <div class="wow">
+      <b>Wow! &mdash; Day / night cycle</b><br>
+      Just stand still for ~45 seconds and the sky cycles through midnight,
+      sunrise, noon, sunset and back. Everything in the world dims at night
+      and brightens at noon (the shader multiplies the final color by an
+      ambient value I update every frame).
+    </div>
+
+  </body>
+</html>
