@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>ASG 4 &mdash; Sherry's Lit World</title>
+
+        <!-- Load external libs -->
+        <script src="lib/cuon-matrix-cse160.js"></script>
+        <script src="lib/cuon-utils.js"></script>
+        <script src="lib/webgl-debug.js"></script>
+        <script src="lib/webgl-utils.js"></script>
+
+        <!-- Load internal libs -->
+        <script src="camera.js"></script>
+        <script src="models/model.js"></script>
+        <script src="models/cube.js"></script>
+        <script src="models/sphere.js"></script>
+        <script src="models/objModel.js"></script>
+
+        <!-- Load main -->
+        <script src="asg4.js"></script>
+
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                max-width: 720px;
+                margin: 24px auto;
+                padding: 0 16px;
+                color: #222;
+            }
+            .header {
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                padding: 14px 18px;
+                margin-bottom: 18px;
+                background: #fafafa;
+            }
+            .header b { color: #000; }
+            h1 { margin: 12px 0 8px; font-size: 1.6em; }
+            .intro { color: #444; line-height: 1.55; margin-bottom: 16px; }
+            .controls {
+                background: #f3f6fa;
+                border-left: 4px solid #4a90e2;
+                padding: 10px 14px;
+                margin: 14px 0;
+                font-size: 0.95em;
+                line-height: 1.7;
+            }
+            .controls kbd {
+                background: #fff; border: 1px solid #bbb; border-bottom-width: 2px;
+                border-radius: 4px; padding: 1px 6px; font-family: monospace;
+                font-size: 0.9em;
+            }
+            .panel { margin: 12px 0; }
+            .panel label { display: inline-block; min-width: 70px; }
+            .panel button { margin: 2px 4px 2px 0; }
+            canvas { display: block; border: 1px solid #ccc; }
+        </style>
+    </head>
+
+    <body onload="main()">
+
+        <div class="header">
+            <div><b>Name:</b> Sherry Shi</div>
+            <div><b>UCSC Email:</b> Yshi162@ucsc.edu</div>
+        </div>
+
+        <h1>Hi, welcome to Sherry's lit world!</h1>
+
+        <p class="intro">
+            This is the same Minecraft-inspired world I built for asgn3, but now
+            everything is lit with a Phong shader (ambient + diffuse + specular).
+            There's a white point light that orbits the scene, a yellow spotlight
+            shining straight down on the red ball in the middle, and a pink torus
+            I loaded from an .obj file sitting on the grass. You can move the
+            lights around, change the light color, toggle each light on and off,
+            and even peek at the raw vertex normals.
+        </p>
+
+        <canvas id="canvas" width="400" height="400">
+            Please use a browser that supports "canvas"
+        </canvas>
+
+        <div class="controls">
+            <b>Controls</b><br>
+            <kbd>W</kbd> <kbd>S</kbd> &mdash; move the camera forward / back<br>
+            <kbd>A</kbd> <kbd>D</kbd> &mdash; pan the camera left / right<br>
+            Buttons toggle lighting, normal visualization, and each light individually<br>
+            Light X / Y / Z sliders move the point light, R / G / B sliders change its color
+        </div>
+
+        <div class="panel">
+            <label>Zoom Out:</label>
+            <input id="zoomSlider" value="1" type="range" min="1" max="20" oninput="onZoomInput(this.value)">
+        </div>
+
+        <div class="panel">
+            <button id="lightingBtn" onclick="toggleLighting()">Lighting: ON</button>
+            <button id="normalVizBtn" onclick="toggleNormalViz()">Normal Visualization: OFF</button>
+            <button id="pointLightBtn" onclick="togglePointLight()">Point Light: ON</button>
+            <button id="spotLightBtn" onclick="toggleSpotLight()">Spot Light: ON</button>
+        </div>
+
+        <div class="panel">
+            <label>Light X:</label>
+            <input id="lightXSlider" value="5" type="range" min="-30" max="30" step="0.1" oninput="onLightPosInput()">
+            <label>Light Y:</label>
+            <input id="lightYSlider" value="3" type="range" min="-30" max="30" step="0.1" oninput="onLightPosInput()">
+            <label>Light Z:</label>
+            <input id="lightZSlider" value="5" type="range" min="-30" max="30" step="0.1" oninput="onLightPosInput()">
+        </div>
+
+        <div class="panel">
+            <label>Light R:</label>
+            <input id="lightRSlider" value="1.0" type="range" min="0" max="1" step="0.01" oninput="onLightColorInput()">
+            <label>Light G:</label>
+            <input id="lightGSlider" value="1.0" type="range" min="0" max="1" step="0.01" oninput="onLightColorInput()">
+            <label>Light B:</label>
+            <input id="lightBSlider" value="1.0" type="range" min="0" max="1" step="0.01" oninput="onLightColorInput()">
+        </div>
+
+    </body>
+</html>

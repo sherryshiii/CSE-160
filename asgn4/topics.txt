@@ -1,0 +1,11 @@
+-Add sphere - DONE
+-Add normals - DONE
+-Add normal visualization - DONE
+-Add point light + marker - DONE
+-Move light over time + sliders - DONE
+-Phong (ambient + diffuse + specular) - DONE
+-Light color sliders - DONE
+-Lighting on/off button - DONE
+-Spotlight + on/off button - DONE
+-World from asgn3 - DONE
+-OBJ model loaded - DONE
