@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ASG 5 &mdash; Sherry's Alien Planet</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 720px;
+            margin: 24px auto;
+            padding: 0 16px;
+            color: #222;
+        }
+        .header {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            background: #fafafa;
+        }
+        .header b { color: #000; }
+        h1 { margin: 12px 0 8px; font-size: 1.6em; }
+        .intro { color: #444; line-height: 1.55; margin-bottom: 16px; }
+        .controls {
+            background: #f3f6fa;
+            border-left: 4px solid #4a90e2;
+            padding: 10px 14px;
+            margin: 14px 0;
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+        #c {
+            display: block;
+            width: 100%;
+            height: 540px;
+            border: 1px solid #ccc;
+            background: #000;
+        }
+    </style>
+
+    <!-- Import map so addons can resolve "three" -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "./lib/three.module.js",
+            "three/addons/": "./lib/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div><b>Name:</b> Sherry Shi</div>
+        <div><b>UCSC Email:</b> Yshi162@ucsc.edu</div>
+    </div>
+
+    <h1>Sherry's Alien Planet</h1>
+
+    <p class="intro">
+        Welcome to a small purple-blue corner of the galaxy. You're parked above
+        an alien surface littered with violet rock outcrops, four glowing crystal
+        spires, and three textured "relic" cubes left behind by some earlier
+        expedition. A low-poly spaceship hovers in the middle while asteroids
+        drift overhead and a ringed planet sits on the horizon &mdash; the whole
+        scene wrapped in a Milky&nbsp;Way skybox and dusted with thousands of
+        floating particles.
+    </p>
+
+    <canvas id="c"></canvas>
+
+    <div class="controls">
+        <b>Controls</b> &mdash; <i>left-drag</i> rotates the view, <i>scroll</i> zooms,
+        <i>right-drag</i> pans. Damping is on so the camera glides a bit after you let go.
+    </div>
+
+    <div class="controls" style="border-left-color:#b84cff;">
+        <b>Wow point</b> &mdash; a two-layer particle system built with
+        <code>THREE.Points</code> and <code>BufferGeometry</code>:
+        2,500 star-dust points scattered in a large shell that slowly rotates,
+        plus 500 magenta "firefly" particles, each with its own orbit radius,
+        speed, and bob phase, animated by writing directly into the
+        <code>BufferAttribute</code> every frame and using additive blending so
+        they glow where they overlap.
+    </div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+CSE 160 — Assignment 5 (Three.js) — Sherry Shi (Yshi162@ucsc.edu)
+
+Rubric coverage:
+- Basic scene working
+    * 3 different primary shape kinds   - DONE (Box, Sphere, Cylinder, Cone, Torus = 5 kinds)
+    * at least one shape animated       - DONE (relic cubes spin, asteroids spin+bob,
+                                                crystals bob+spin, ringed planet rotates,
+                                                spaceship hovers+yaws)
+    * directional light                 - DONE (main "sun" DirectionalLight)
+    * perspective camera                - DONE (PerspectiveCamera, fov 60)
+- At least one shape is textured        - DONE (relicSingle = 1 texture x 6 faces,
+                                                relicSixFace = 6 textures x 6 faces)
+- Custom textured 3D model              - DONE (models/spaceship.glb loaded by GLTFLoader,
+                                                Quaternius CC0 from poly.pizza)
+- Camera controls                       - DONE (OrbitControls: rotate/zoom/pan + damping)
+- 3 different light sources             - DONE (4 kinds: Directional, Ambient,
+                                                Hemisphere, Point)
+- Skybox                                - DONE (CubeTextureLoader, Milky Way 6-face cubemap)
+- 20+ primary shapes in scene           - DONE (25 total: 9 box, 6 sphere, 4 cylinder,
+                                                4 cone, 1 sphere planet, 1 torus ring,
+                                                1 engine bulb sphere)
+- Wow / extra feature (1.5 pts)         - DONE (two-layer Points + BufferGeometry
+                                                particle system; see HTML page for note)
+- Site link as a comment on submission  - Pending (add the GitHub Pages URL when uploading)
+
+Files:
+  index.html        page entry, import map, header, intro, controls explainer
+  main.js           all Three.js code, organized step-by-step
+  lib/              three.module.js, loaders/, controls/, utils/
+  textures/         crate.jpg, flower-1..6.jpg, skybox/{px,nx,py,ny,pz,nz}.jpg
+  models/           spaceship.glb (Quaternius, CC0, poly.pizza)
+
+Asset credits:
+  - Spaceship model:   Quaternius, CC0
+                       https://poly.pizza/m/Jqfed124pQ
+  - Skybox cubemap:    Three.js examples — MilkyWay
+                       https://threejs.org/examples/textures/cube/MilkyWay/
+  - Tutorial textures: Three.js manual textures tutorial
+                       https://threejs.org/manual/examples/resources/images/
